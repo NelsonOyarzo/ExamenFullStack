@@ -16,11 +16,11 @@ const LandingPageTemplate: React.FC<LandingPageTemplateProps> = ({ children, foo
   return (
     <>
       {/* Fixed Top Border Tag (Left) - Always visible on mobile, conditionally hidden on desktop (lg) */}
-      <Link 
+      <Link
         to="/login"
         className={`fixed top-0 left-4 md:left-8 z-50 bg-brand-black dark:bg-brand-white text-brand-white dark:text-brand-black px-4 py-2 md:px-6 md:py-3 rounded-b-lg font-black tracking-widest border-x-2 border-b-2 border-brand-white dark:border-brand-black shadow-hard dark:shadow-hard-dark hover:translate-y-1 hover:shadow-none transition-all cursor-pointer active:scale-95 ${hideBrandTag ? 'lg:hidden' : ''}`}
       >
-        DENOISE
+        POKÉSTORE
       </Link>
 
       {/* Mobile Back to Home Button (Right) - Visible ONLY on internal pages and ONLY on mobile/tablet */}

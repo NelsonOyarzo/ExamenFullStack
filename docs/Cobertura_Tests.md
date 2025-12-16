@@ -1,7 +1,7 @@
 # Cobertura de Testing (Jasmine/Karma)
 
 ## Alcance
-- **Validaciones:** RUN (módulo 11), correo corporativo/educativo (dominios @denoise.* y @duocuc.*).
+- **Validaciones:** RUN (módulo 11), correo corporativo/educativo (dominios @pokestore.* y @duocuc.*).
 - **Roles:** Verificación de `esAdmin(rol)`.
 - **CRUD + Auth (mock):** agregar, actualizar, eliminar, login y logout.
 - **DOM helper:** `setError`.
