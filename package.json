@@ -1,0 +1,33 @@
+{
+  "name": "pokestore-chile",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Tienda online de cartas Pokémon TCG para Chile",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node server/server.js",
+    "server:dev": "nodemon server/server.js",
+    "deploy:build": "npm run build && echo Build completed successfully!",
+    "deploy:test": "node server/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^10.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@heroicons/react": "^2.2.0",
+    "react-router-dom": "^6.22.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.1.1",
+    "typescript": "~5.8.2",
+    "vite": "^7.2.4"
+  }
+}
