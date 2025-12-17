@@ -2,10 +2,50 @@
     "info": {
         "_postman_id": "b6a7b3c2-1d4e-4f5a-9a8b-7c6d5e4f3a2b",
         "name": "PokéStore Chile API",
-        "description": "Colección para probar los endpoints de PokéStore Chile. Asegúrate de configurar la variable `token` en la colección o ambiente después de hacer login.",
+        "description": "Colección completa para probar los 29 endpoints de PokéStore Chile. \n\n**Instrucciones para Vercel:**\n1. Ve a la pestaña 'Variables' de la colección.\n2. Cambia `baseUrl` de `http://localhost:3000` a tu URL de Vercel (ej: `https://tu-proyecto.vercel.app`).\n3. ¡Listo! Todas las peticiones irán allá.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "item": [
+        {
+            "name": "Public",
+            "item": [
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/health",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "health"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Root Welcome",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                ""
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
         {
             "name": "Auth",
             "item": [
@@ -45,7 +85,10 @@
                             "script": {
                                 "exec": [
                                     "var jsonData = pm.response.json();",
-                                    "pm.collectionVariables.set(\"token\", jsonData.token);"
+                                    "if (jsonData.token) {",
+                                    "    pm.collectionVariables.set(\"token\", jsonData.token);",
+                                    "    console.log(\"Token set automatically\");",
+                                    "}"
                                 ],
                                 "type": "text/javascript"
                             }
@@ -78,7 +121,7 @@
                     "response": []
                 },
                 {
-                    "name": "Get Profile",
+                    "name": "Get My Profile",
                     "request": {
                         "method": "GET",
                         "header": [],
@@ -103,7 +146,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"telefono\": \"+56987654321\",\n    \"direccion\": \"Av. Siempre Viva 742\"\n}",
+                            "raw": "{\n    \"telefono\": \"+56999999999\",\n    \"direccion\": {\n        \"calle\": \"Av. Siempre Viva 123\",\n        \"comuna\": \"Santiago\",\n        \"ciudad\": \"Santiago\",\n        \"region\": \"RM\"\n    }\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -127,7 +170,7 @@
             ]
         },
         {
-            "name": "Productos",
+            "name": "Products",
             "item": [
                 {
                     "name": "Get All Products",
@@ -181,7 +224,7 @@
             ]
         },
         {
-            "name": "Carrito",
+            "name": "Cart",
             "item": [
                 {
                     "name": "Get Cart",
@@ -202,13 +245,13 @@
                     "response": []
                 },
                 {
-                    "name": "Add Item to Cart",
+                    "name": "Add Item",
                     "request": {
                         "method": "POST",
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"productoId\": 1,\n    \"cantidad\": 2\n}",
+                            "raw": "{\n    \"productoId\": 1,\n    \"cantidad\": 1\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -230,13 +273,13 @@
                     "response": []
                 },
                 {
-                    "name": "Update Cart Item",
+                    "name": "Update Quantity",
                     "request": {
                         "method": "PUT",
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"cantidad\": 1\n}",
+                            "raw": "{\n    \"cantidad\": 3\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -259,7 +302,7 @@
                     "response": []
                 },
                 {
-                    "name": "Remove Item from Cart",
+                    "name": "Remove Item",
                     "request": {
                         "method": "DELETE",
                         "header": [],
@@ -299,8 +342,45 @@
             ]
         },
         {
-            "name": "Ordenes",
+            "name": "Orders",
             "item": [
+                {
+                    "name": "Get My Orders",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/ordenes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "ordenes"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Order by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/ordenes/REPLACE_WITH_UUID",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "ordenes",
+                                "REPLACE_WITH_UUID"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
                 {
                     "name": "Create Order",
                     "request": {
@@ -327,49 +407,12 @@
                         }
                     },
                     "response": []
-                },
-                {
-                    "name": "Get My Orders",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/api/ordenes",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "ordenes"
-                            ]
-                        }
-                    },
-                    "response": []
                 }
             ]
         },
         {
-            "name": "Admin",
+            "name": "Admin - Products",
             "item": [
-                {
-                    "name": "Get Stats",
-                    "request": {
-                        "method": "GET",
-                        "header": [],
-                        "url": {
-                            "raw": "{{baseUrl}}/api/admin/stats",
-                            "host": [
-                                "{{baseUrl}}"
-                            ],
-                            "path": [
-                                "api",
-                                "admin",
-                                "stats"
-                            ]
-                        }
-                    },
-                    "response": []
-                },
                 {
                     "name": "Create Product",
                     "request": {
@@ -377,7 +420,7 @@
                         "header": [],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"nombre\": \"Nueva Carta\",\n    \"set\": \"Base Set\",\n    \"numeroSet\": \"1/100\",\n    \"rareza\": \"Rare\",\n    \"tipo\": \"Fire\",\n    \"precio\": 5000,\n    \"stock\": 10,\n    \"imagen\": \"https://example.com/image.png\",\n    \"descripcion\": \"Una nueva carta\"\n}",
+                            "raw": "{\n    \"nombre\": \"Mewtwo Test\",\n    \"set\": \"Base Set\",\n    \"numeroSet\": \"1/100\",\n    \"rareza\": \"Rare\",\n    \"tipo\": \"Psychic\",\n    \"precio\": 5000,\n    \"stock\": 10,\n    \"imagen\": \"https://images.pokemontcg.io/pgo/30_hires.png\",\n    \"descripcion\": \"Una nueva carta de prueba\"\n}",
                             "options": {
                                 "raw": {
                                     "language": "json"
@@ -398,7 +441,35 @@
                     "response": []
                 },
                 {
-                    "name": "Update Data (Admin)",
+                    "name": "Update Product",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"nombre\": \"Mewtwo Update Test\",\n    \"set\": \"Base Set\",\n    \"rareza\": \"Rare\",\n    \"tipo\": \"Psychic\",\n    \"precio\": 9000,\n    \"stock\": 5\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/productos/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "productos",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Stock",
                     "request": {
                         "method": "PATCH",
                         "header": [],
@@ -425,26 +496,267 @@
                         }
                     },
                     "response": []
+                },
+                {
+                    "name": "Delete Product",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/productos/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "productos",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
                 }
             ]
         },
         {
-            "name": "Health Check",
-            "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                    "raw": "{{baseUrl}}/api/health",
-                    "host": [
-                        "{{baseUrl}}"
-                    ],
-                    "path": [
-                        "api",
-                        "health"
-                    ]
+            "name": "Admin - Users",
+            "item": [
+                {
+                    "name": "Get All Users",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get User by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"nombre\": \"Usuario Test\",\n    \"run\": \"88.888.888-8\",\n    \"correo\": \"test@pokestore.cl\",\n    \"contrasena\": \"1234\",\n    \"rol\": \"Cliente\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update User",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"nombre\": \"Usuario Editado\",\n    \"run\": \"88.888.888-8\",\n    \"correo\": \"test@pokestore.cl\",\n    \"rol\": \"Cliente\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "2"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/2",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "2"
+                            ]
+                        }
+                    },
+                    "response": []
                 }
-            },
-            "response": []
+            ]
+        },
+        {
+            "name": "Admin - Orders & Stats",
+            "item": [
+                {
+                    "name": "Get All Orders",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/admin/ordenes",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "admin",
+                                "ordenes"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Order Status",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"estado\": \"Entregado\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/admin/ordenes/UUID_ORDER_HERE/estado",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "admin",
+                                "ordenes",
+                                "UUID_ORDER_HERE",
+                                "estado"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Stats",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/admin/stats",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "admin",
+                                "stats"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Support Messages",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/admin/soporte",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "admin",
+                                "soporte"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Support",
+            "item": [
+                {
+                    "name": "Send Message",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"nombre\": \"Cliente Feliz\",\n    \"correo\": \"cliente@gmail.com\",\n    \"mensaje\": \"Tengo una duda con mi pedido\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/soporte",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "soporte"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
         }
     ],
     "auth": {
