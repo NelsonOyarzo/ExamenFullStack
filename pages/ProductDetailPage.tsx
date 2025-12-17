@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { productService } from '../services/productService';
 import { useCart } from '../context/CartContext';
+import { useToast } from '../context/ToastContext';
 import StockBadge from '../components/StockBadge';
 import type { Producto } from '../types';
 
@@ -12,6 +13,7 @@ const ProductDetailPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [cantidad, setCantidad] = useState(1);
     const { addToCart } = useCart();
+    const { showToast } = useToast();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,9 +35,10 @@ const ProductDetailPage: React.FC = () => {
         if (!producto) return;
         try {
             await addToCart(producto.id, cantidad);
-            navigate('/carrito');
+            showToast(`${cantidad}x ${producto.nombre} agregado(s)`, 'success');
+            // navigate('/carrito'); // Removed redirect for better UX with toast
         } catch (error: any) {
-            alert(error.message);
+            showToast(error.message, 'error');
         }
     };
 

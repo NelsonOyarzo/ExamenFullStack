@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import type { Producto } from '../types';
+import { useToast } from '../context/ToastContext';
 
 interface ProductCardProps {
     producto: Producto;
@@ -9,6 +10,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ producto, onAddToCart }) => {
+    const { showToast } = useToast();
     const getRarezaColor = (rareza: string) => {
         if (rareza.includes('Secret')) return 'bg-rare-gold text-brand-black';
         if (rareza.includes('Ultra')) return 'bg-rare-silver text-brand-black';
@@ -66,7 +68,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ producto, onAddToCart }) => {
 
                     {producto.stock > 0 && onAddToCart && (
                         <button
-                            onClick={() => onAddToCart(producto.id)}
+                            onClick={() => {
+                                onAddToCart(producto.id);
+                                showToast(`¡${producto.nombre} agregado!`, 'success');
+                            }}
                             className="px-4 py-2 bg-pokemon-blue hover:bg-pokemon-red text-white font-semibold rounded-lg transition-colors duration-200 shadow-hard hover:shadow-none hover:translate-x-1 hover:translate-y-1"
                         >
                             Agregar

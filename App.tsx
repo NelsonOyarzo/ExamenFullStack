@@ -4,6 +4,7 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { ToastProvider } from './context/ToastContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -27,31 +28,33 @@ const App: React.FC = () => {
     <Router>
       <AuthProvider>
         <ThemeProvider>
-          <CartProvider>
-            <div className="min-h-screen flex flex-col bg-brand-white dark:bg-brand-black">
-              <Header />
-              <main className="flex-1">
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/catalogo" element={<CatalogPage />} />
-                  <Route path="/producto/:id" element={<ProductDetailPage />} />
-                  <Route path="/carrito" element={<CartPage />} />
-                  <Route path="/checkout" element={<CheckoutPage />} />
-                  <Route path="/ordenes" element={<OrderHistoryPage />} />
-                  <Route path="/orden/:id" element={<OrderConfirmationPage />} />
-                  <Route path="/contacto" element={<ContactPage />} />
-                  <Route path="/login" element={<LoginPage />} />
-                  <Route path="/admin" element={<AdminDashboardPage />} />
-                  <Route path="/dashboard" element={<UserDashboardPage />} />
-                  <Route path="/descubrir" element={<DiscoverPage />} />
-                  <Route path="/oddie" element={<OddiePage />} />
-                  <Route path="/nosotros" element={<AboutPage />} />
-                  <Route path="/terminos" element={<TermsPage />} />
-                </Routes>
-              </main>
-              <Footer />
-            </div>
-          </CartProvider>
+          <ToastProvider>
+            <CartProvider>
+              <div className="min-h-screen flex flex-col bg-brand-white dark:bg-brand-black">
+                <Header />
+                <main className="flex-1">
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/catalogo" element={<CatalogPage />} />
+                    <Route path="/producto/:id" element={<ProductDetailPage />} />
+                    <Route path="/carrito" element={<CartPage />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/ordenes" element={<OrderHistoryPage />} />
+                    <Route path="/orden/:id" element={<OrderConfirmationPage />} />
+                    <Route path="/contacto" element={<ContactPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/admin" element={<AdminDashboardPage />} />
+                    <Route path="/dashboard" element={<UserDashboardPage />} />
+                    <Route path="/descubrir" element={<DiscoverPage />} />
+                    <Route path="/oddie" element={<OddiePage />} />
+                    <Route path="/nosotros" element={<AboutPage />} />
+                    <Route path="/terminos" element={<TermsPage />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
+            </CartProvider>
+          </ToastProvider>
         </ThemeProvider>
       </AuthProvider>
     </Router>

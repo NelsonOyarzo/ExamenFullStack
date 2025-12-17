@@ -1,11 +1,13 @@
 // pages/UserDashboardPage.tsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 import { authService } from '../services/authService';
 import type { DireccionEnvio } from '../types';
 
 const UserDashboardPage: React.FC = () => {
-    const { user, login } = useAuth(); // We might need to refresh user in context, but authService.updateProfile returns new user
+    const { user, updateProfile } = useAuth();
+    const { showToast } = useToast();
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
         nombre: '',
@@ -48,9 +50,9 @@ const UserDashboardPage: React.FC = () => {
             });
 
             // Force reload to get fresh data or we would need to update context
-            window.location.reload();
-            // setMessage('Perfil actualizado correctamente');
-            // setIsEditing(false);
+            await updateProfile(formData);
+            showToast('Perfil actualizado correctamente', 'success');
+            setIsEditing(false);
         } catch (error) {
             setMessage('Error al actualizar perfil');
         }

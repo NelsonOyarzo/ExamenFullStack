@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom';
 import { formatRut } from '../utils/formatters';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 const LoginPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -16,6 +17,7 @@ const LoginPage: React.FC = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { login, register } = useAuth();
+    const { showToast } = useToast();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
@@ -27,16 +29,19 @@ const LoginPage: React.FC = () => {
         try {
             if (isLogin) {
                 await login(formData.correo, formData.contrasena);
+                showToast(`Bienvenido, ${formData.correo}`, 'success');
                 const redirect = searchParams.get('redirect') || '/';
                 navigate(redirect);
             } else {
                 await register(formData);
                 setIsLogin(true);
                 setError('');
-                alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+                showToast('¡Registro exitoso! Ahora puedes iniciar sesión.', 'success');
             }
         } catch (err: any) {
-            setError(err.message || 'Error en la operación');
+            const msg = err.message || 'Error en la operación';
+            setError(msg);
+            showToast(msg, 'error');
         } finally {
             setLoading(false);
         }
