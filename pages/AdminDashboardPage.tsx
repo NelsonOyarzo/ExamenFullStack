@@ -12,6 +12,10 @@ import {
     ChartBarIcon, CubeIcon, ShoppingBagIcon, UsersIcon,
     PlusIcon, PencilIcon, TrashIcon, XMarkIcon
 } from '@heroicons/react/24/outline';
+import {
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+    PieChart, Pie, Cell
+} from 'recharts';
 
 const AdminDashboardPage: React.FC = () => {
     const { isAdmin, user } = useAuth();
@@ -48,8 +52,8 @@ const TabButton: React.FC<{ active: boolean; onClick: () => void; icon: React.Re
     <button
         onClick={onClick}
         className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-bold transition-all ${active
-                ? 'bg-pokemon-blue text-white shadow-md'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+            ? 'bg-pokemon-blue text-white shadow-md'
+            : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
     >
         {icon}
@@ -61,9 +65,20 @@ const TabButton: React.FC<{ active: boolean; onClick: () => void; icon: React.Re
 
 const StatsView = () => {
     const [stats, setStats] = useState<AdminStats | null>(null);
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [products, setProducts] = useState<Producto[]>([]);
 
     useEffect(() => {
-        orderService.getAdminStats().then(setStats).catch(console.error);
+        // Fetch all data for charts
+        Promise.all([
+            orderService.getAdminStats(),
+            orderService.getAllOrders(),
+            productService.getProducts()
+        ]).then(([statsData, ordersData, productsData]) => {
+            setStats(statsData);
+            setOrders(ordersData);
+            setProducts(productsData);
+        }).catch(console.error);
     }, []);
 
     if (!stats) return <div className="p-8 text-center">Cargando estadísticas...</div>;
@@ -77,14 +92,81 @@ const StatsView = () => {
         { label: 'Total Órdenes', value: stats.totalOrdenes, color: 'bg-gray-100 text-gray-800' },
     ];
 
+    // Data Processing for Charts
+    const statusData = [
+        { name: 'Pendiente', value: orders.filter(o => o.estado === 'Pendiente').length },
+        { name: 'Procesando', value: orders.filter(o => o.estado === 'Procesando').length },
+        { name: 'Enviado', value: orders.filter(o => o.estado === 'Enviado').length },
+        { name: 'Entregado', value: orders.filter(o => o.estado === 'Entregado').length },
+        { name: 'Cancelado', value: orders.filter(o => o.estado === 'Cancelado').length },
+    ].filter(d => d.value > 0);
+
+    const rarityData = products.reduce((acc: any[], curr) => {
+        const rarity = curr.rareza.split(' ')[0]; // Simplify rarity name
+        const found = acc.find(i => i.name === rarity);
+        if (found) found.value++;
+        else acc.push({ name: rarity, value: 1 });
+        return acc;
+    }, []).sort((a, b) => b.value - a.value).slice(0, 5); // Top 5 rarities
+
+    const COLORS = ['#FFBB28', '#FF8042', '#0088FE', '#00C49F', '#FF4444'];
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cards.map((c, i) => (
-                <div key={i} className={`p-6 rounded-lg ${c.color} border-2 border-transparent hover:border-brand-black transition-all`}>
-                    <h3 className="text-lg font-bold mb-2 opacity-80">{c.label}</h3>
-                    <p className="text-4xl font-black">{c.value}</p>
+        <div className="space-y-8">
+            {/* KPI Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {cards.map((c, i) => (
+                    <div key={i} className={`p-6 rounded-lg ${c.color} border-2 border-transparent hover:border-brand-black transition-all`}>
+                        <h3 className="text-lg font-bold mb-2 opacity-80">{c.label}</h3>
+                        <p className="text-4xl font-black">{c.value}</p>
+                    </div>
+                ))}
+            </div>
+
+            {/* Charts Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Orders Chart */}
+                <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-600">
+                    <h3 className="text-lg font-bold mb-4 text-brand-black dark:text-brand-white">Estado de Órdenes</h3>
+                    <div className="h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                                <Pie
+                                    data={statusData}
+                                    cx="50%"
+                                    cy="50%"
+                                    innerRadius={60}
+                                    outerRadius={80}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                >
+                                    {statusData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
                 </div>
-            ))}
+
+                {/* Stock Chart */}
+                <div className="bg-white dark:bg-gray-700 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-600">
+                    <h3 className="text-lg font-bold mb-4 text-brand-black dark:text-brand-white">Distribución por Rareza (Top 5)</h3>
+                    <div className="h-64">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={rarityData}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="name" />
+                                <YAxis />
+                                <Tooltip />
+                                <Bar dataKey="value" fill="#3B4CCA" radius={[4, 4, 0, 0]} />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
@@ -236,8 +318,8 @@ const OrdersView = () => {
                                 <td className="p-3 font-bold">{orderService.formatPrice(o.total)}</td>
                                 <td className="p-3">
                                     <span className={`px-2 py-1 rounded-full text-xs font-bold ${o.estado === 'Pendiente' ? 'bg-yellow-100 text-yellow-800' :
-                                            o.estado === 'Entregado' ? 'bg-green-100 text-green-800' :
-                                                o.estado === 'Cancelado' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+                                        o.estado === 'Entregado' ? 'bg-green-100 text-green-800' :
+                                            o.estado === 'Cancelado' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
                                         }`}>
                                         {o.estado}
                                     </span>
