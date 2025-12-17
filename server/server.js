@@ -14,20 +14,19 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
   : ['http://localhost:5173', 'http://localhost:3000'];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      return callback(new Error('CORS not allowed'), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true
-}));
+app.use(cors()); // Allow all origins for dev
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
+
+// ===== Root Endpoint =====
+app.get('/', (req, res) => {
+  res.send('Welcome to PokéStore Chile API! The server is running correctly.');
+});
 
 // ===== Datos en memoria (demo) =====
 const users = [];
@@ -257,10 +256,18 @@ app.post('/api/auth/register', (req, res) => {
 
 app.post('/api/auth/login', (req, res) => {
   const { correo, contrasena } = req.body || {};
+  console.log('Login attempt:', { correo, contrasena }); // Debug log
   const user = users.find(u => u.correo === correo);
-  if (!user) return res.status(401).json({ error: 'Credenciales inválidas' });
+  if (!user) {
+    console.log('User not found');
+    return res.status(401).json({ error: 'Credenciales inválidas' });
+  }
   const ok = bcrypt.compareSync(contrasena || '', user.contrasenaHash);
-  if (!ok) return res.status(401).json({ error: 'Credenciales inválidas' });
+  if (!ok) {
+    console.log('Wrong password');
+    return res.status(401).json({ error: 'Credenciales inválidas' });
+  }
+  console.log('Login successful for:', user.nombre);
   const token = jwt.sign({ id: user.id, rol: user.rol, correo: user.correo, nombre: user.nombre }, JWT_SECRET, { expiresIn: '8h' });
   res.json({ token, user: { id: user.id, nombre: user.nombre, correo: user.correo, rol: user.rol } });
 });
