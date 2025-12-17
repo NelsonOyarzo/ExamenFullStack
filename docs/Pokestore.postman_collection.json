@@ -784,7 +784,14 @@
             "script": {
                 "type": "text/javascript",
                 "exec": [
-                    ""
+                    "// Test Global para todos los endpoints",
+                    "pm.test(\"Status code is 2xx (Exitoso)\", function () {",
+                    "    pm.response.to.be.success;",
+                    "});",
+                    "",
+                    "pm.test(\"Response time is acceptable (<2s)\", function () {",
+                    "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+                    "});"
                 ]
             }
         }

@@ -5,6 +5,8 @@ const helmet = require('helmet');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { v4: uuid } = require('uuid');
+const { WebpayPlus } = require('transbank-sdk');
+const { Options, IntegrationApiKeys, Environment, IntegrationCommerceCodes } = require('transbank-sdk');
 
 const app = express();
 app.use(helmet());
@@ -643,6 +645,45 @@ app.get('/api/admin/stats', authRequired, adminOnly, (req, res) => {
     ordenesPendientes,
     productosAgotados
   });
+});
+
+// ===== Webpay Integration =====
+app.post('/api/webpay/create', authRequired, async (req, res) => {
+  try {
+    const { amount } = req.body;
+    const buyOrder = 'O-' + Math.floor(Math.random() * 1000000);
+    const sessionId = req.user.id.toString();
+    const returnUrl = req.headers.origin + '/webpay-return';
+
+    const tx = new WebpayPlus.Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, Environment.Integration));
+    const createResponse = await tx.create(buyOrder, sessionId, amount, returnUrl);
+
+    res.json({
+      url: createResponse.url,
+      token: createResponse.token,
+      buyOrder
+    });
+  } catch (error) {
+    console.error('Webpay Create Error:', error);
+    res.status(500).json({ error: 'Error al iniciar pago' });
+  }
+});
+
+app.post('/api/webpay/commit', async (req, res) => {
+  try {
+    const { token } = req.body;
+    const tx = new WebpayPlus.Transaction(new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, Environment.Integration));
+    const commitResponse = await tx.commit(token);
+
+    if (commitResponse.status === 'AUTHORIZED' && commitResponse.response_code === 0) {
+      res.json({ status: 'AUTHORIZED', details: commitResponse });
+    } else {
+      res.json({ status: 'REJECTED', details: commitResponse });
+    }
+  } catch (error) {
+    console.error('Webpay Commit Error:', error);
+    res.status(500).json({ error: 'Error al confirmar pago' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;

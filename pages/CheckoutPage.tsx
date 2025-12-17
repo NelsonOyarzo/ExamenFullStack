@@ -42,27 +42,49 @@ const CheckoutPage: React.FC = () => {
         }
     }, [user, cart, isAuthenticated, navigate]);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleWebpayPayment = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const orderData = {
-                direccionEnvio: {
-                    calle: formData.calle,
-                    numero: '', // Optional or part of calle
-                    comuna: formData.comuna,
-                    ciudad: formData.ciudad,
-                    region: formData.region
-                } as DireccionEnvio
-            };
+            // 1. Save address to localstorage to use it on return
+            localStorage.setItem('pendingOrderAddress', JSON.stringify({
+                calle: formData.calle,
+                comuna: formData.comuna,
+                ciudad: formData.ciudad,
+                region: formData.region
+            }));
 
-            const newOrder = await orderService.createOrder(orderData);
-            await refreshCart(); // Cart should be empty now
-            navigate(`/orden/${newOrder.id}`);
+            // 2. Init Webpay Transaction
+            const token = localStorage.getItem('token');
+            const response = await fetch('http://localhost:3000/api/webpay/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ amount: cart.total })
+            });
+            const data = await response.json();
+
+            if (!data.url || !data.token) throw new Error('Error al iniciar Webpay');
+
+            // 3. Auto-submit form to Transbank
+            const form = document.createElement('form');
+            form.action = data.url;
+            form.method = 'POST';
+
+            const tokenInput = document.createElement('input');
+            tokenInput.type = 'hidden';
+            tokenInput.name = 'token_ws';
+            tokenInput.value = data.token;
+
+            form.appendChild(tokenInput);
+            document.body.appendChild(form);
+            form.submit();
+
         } catch (error: any) {
-            alert(error.message || 'Error al procesar la orden');
-        } finally {
+            alert(error.message || 'Error al procesar el pago');
             setLoading(false);
         }
     };
@@ -77,7 +99,7 @@ const CheckoutPage: React.FC = () => {
                 {/* Shipping Form */}
                 <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-card border-2 border-brand-black dark:border-brand-white">
                     <h2 className="text-2xl font-bold mb-6">Dirección de Envío</h2>
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleWebpayPayment} className="space-y-4">
                         <div>
                             <label className="block text-sm font-bold mb-1">Calle y Número *</label>
                             <input
@@ -124,9 +146,9 @@ const CheckoutPage: React.FC = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full mt-6 py-4 bg-pokemon-green text-white font-black text-xl rounded-lg shadow-hard hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all disabled:opacity-50"
+                            className="w-full mt-6 py-4 bg-pokemon-blue text-white font-black text-xl rounded-lg shadow-hard hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all disabled:opacity-50"
                         >
-                            {loading ? 'Procesando...' : `Pagar ${formatPrice(cart.total)}`}
+                            {loading ? 'Redirigiendo a Webpay...' : `Pagar con Webpay ${formatPrice(cart.total)}`}
                         </button>
                     </form>
                 </div>
