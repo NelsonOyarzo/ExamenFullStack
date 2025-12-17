@@ -15,6 +15,10 @@ import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+import DiscoverPage from './pages/DiscoverPage';
+import OddiePage from './pages/OddiePage';
+import AboutPage from './pages/AboutPage';
+import TermsPage from './pages/TermsPage';
 import UserDashboardPage from './pages/UserDashboardPage';
 
 const App: React.FC = () => {
@@ -37,6 +41,10 @@ const App: React.FC = () => {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/admin" element={<AdminDashboardPage />} />
                 <Route path="/dashboard" element={<UserDashboardPage />} />
+                <Route path="/descubrir" element={<DiscoverPage />} />
+                <Route path="/oddie" element={<OddiePage />} />
+                <Route path="/nosotros" element={<AboutPage />} />
+                <Route path="/terminos" element={<TermsPage />} />
               </Routes>
             </main>
             <Footer />
