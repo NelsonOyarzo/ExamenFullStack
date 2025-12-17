@@ -1,6 +1,6 @@
 // pages/LoginPage.tsx
 import React, { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom';
 import { formatRut } from '../utils/formatters';
 import { useAuth } from '../context/AuthContext';
 
