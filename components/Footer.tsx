@@ -42,24 +42,24 @@ const Footer: React.FC = () => {
                         <h4 className="font-bold mb-4 text-pokemon-yellow">Información</h4>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <a href="#" className="text-gray-300 hover:text-pokemon-yellow transition-colors">
+                                <Link to="/nosotros" className="text-gray-300 hover:text-pokemon-yellow transition-colors">
                                     Sobre Nosotros
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-300 hover:text-pokemon-yellow transition-colors">
+                                <Link to="/terminos" className="text-gray-300 hover:text-pokemon-yellow transition-colors">
                                     Términos y Condiciones
-                                </a>
+                                </Link>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-300 hover:text-pokemon-yellow transition-colors">
-                                    Política de Privacidad
-                                </a>
+                                <Link to="/descubrir" className="text-gray-300 hover:text-pokemon-yellow transition-colors">
+                                    Descubrir (Random)
+                                </Link>
                             </li>
                             <li>
-                                <a href="#" className="text-gray-300 hover:text-pokemon-yellow transition-colors">
-                                    Envíos y Devoluciones
-                                </a>
+                                <Link to="/oddie" className="text-gray-300 hover:text-pokemon-yellow transition-colors">
+                                    Zona Oddie (Raras)
+                                </Link>
                             </li>
                         </ul>
                     </div>
