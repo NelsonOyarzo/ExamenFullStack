@@ -1,6 +1,7 @@
 // pages/LoginPage.tsx
 import React, { useState } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { formatRut } from '../utils/formatters';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage: React.FC = () => {
@@ -84,7 +85,7 @@ const LoginPage: React.FC = () => {
                                     type="text"
                                     required
                                     value={formData.run}
-                                    onChange={(e) => setFormData({ ...formData, run: e.target.value })}
+                                    onChange={(e) => setFormData({ ...formData, run: formatRut(e.target.value) })}
                                     className="w-full px-4 py-2 border-2 border-brand-black dark:border-brand-white rounded-lg focus:outline-none focus:ring-2 focus:ring-pokemon-blue dark:bg-gray-700 dark:text-white"
                                     placeholder="12.345.678-9"
                                 />
