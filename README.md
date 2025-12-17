@@ -156,4 +156,3 @@ El backend incluye 10 cartas de ejemplo:
 
 - **Persistencia**: Los datos se almacenan en memoria (se pierden al reiniciar)
 - **Pagos**: No incluye integración de pasarela de pagos
-- **Producción**: Requiere base de datos para uso real

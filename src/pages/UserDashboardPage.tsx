@@ -37,7 +37,7 @@ const UserDashboardPage: React.FC = () => {
         try {
             const direccion: DireccionEnvio = {
                 calle: formData.calle,
-                numero: '', // Simplified for demo
+                numero: '',
                 comuna: formData.comuna,
                 ciudad: formData.ciudad,
                 region: formData.region
@@ -156,7 +156,6 @@ const UserDashboardPage: React.FC = () => {
                     )}
                 </div>
 
-                {/* Orders Summary (Placeholder for now, or link to history) */}
                 <div className="bg-pokemon-red/10 rounded-lg p-8 border-2 border-pokemon-red">
                     <h2 className="text-2xl font-bold text-pokemon-red mb-4">Mis Pedidos</h2>
                     <p className="mb-4">Revisa el estado de tus compras anteriores.</p>

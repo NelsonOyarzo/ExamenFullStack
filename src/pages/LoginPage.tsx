@@ -170,7 +170,7 @@ const LoginPage: React.FC = () => {
                     </Link>
                 </div>
 
-                {/* Demo Credentials */}
+
                 <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm">
                     <p className="font-semibold text-brand-black dark:text-brand-white mb-2">Credenciales de prueba:</p>
                     <p className="text-gray-600 dark:text-gray-400">

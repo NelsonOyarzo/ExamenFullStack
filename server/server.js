@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to PokéStore Chile API! The server is running correctly.');
 });
 
-// ===== Datos en memoria (demo) =====
+// ===== Datos en memoria (Almacenamiento Temporal) =====
 const users = [];
 const productos = [];
 const carritos = {}; // { userId: { items: [...] } }

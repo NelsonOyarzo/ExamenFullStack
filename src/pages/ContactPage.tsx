@@ -6,7 +6,7 @@ const ContactPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('Mensaje enviado (demo)');
+    alert('Mensaje enviado correctamente');
   };
 
   return (

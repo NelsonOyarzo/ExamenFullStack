@@ -6,7 +6,7 @@
 ### Tecnologías Utilizadas
 *   **Backend**: Node.js + Express (API REST).
 *   **Frontend**: React.js + Vite (Single Page Application).
-*   **Base de Datos**: In-Memory Storage (Arrays persistentes en runtime para demostración).
+*   **Base de Datos**: Arrays en memoria (Persistencia temporal durante el tiempo de ejecución).
 *   **Seguridad**: JWT (JSON Web Tokens) para sesiones, `bcryptjs` para hashing de contraseñas.
 *   **Integraciones**:
     *   **Transbank Webpay Plus**: Procesamiento de pagos (Ambiente Integración).
