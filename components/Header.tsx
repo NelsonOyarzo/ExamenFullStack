@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import ThemeToggle from './ThemeToggle';
 
 const Header: React.FC = () => {
     const { user, logout, isAuthenticated, isAdmin } = useAuth();
@@ -56,6 +57,7 @@ const Header: React.FC = () => {
 
                     {/* Actions */}
                     <div className="flex items-center space-x-4">
+                        <ThemeToggle />
                         {/* Cart */}
                         <Link
                             to="/carrito"
