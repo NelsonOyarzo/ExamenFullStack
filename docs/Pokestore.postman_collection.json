@@ -85,10 +85,16 @@
                             "script": {
                                 "exec": [
                                     "var jsonData = pm.response.json();",
-                                    "if (jsonData.token) {",
+                                    "",
+                                    "pm.test(\"Login successful - Token present\", function () {",
+                                    "    pm.expect(jsonData).to.have.property('token');",
                                     "    pm.collectionVariables.set(\"token\", jsonData.token);",
-                                    "    console.log(\"Token set automatically\");",
-                                    "}"
+                                    "});",
+                                    "",
+                                    "pm.test(\"User data returned\", function () {",
+                                    "    pm.expect(jsonData).to.have.property('user');",
+                                    "    pm.expect(jsonData.user).to.have.property('correo');",
+                                    "});"
                                 ],
                                 "type": "text/javascript"
                             }
@@ -200,6 +206,27 @@
                             ]
                         }
                     },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "pm.test(\"Product list is an array\", function () {",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});",
+                                    "pm.test(\"Products contain required fields\", function () {",
+                                    "    if(jsonData.length > 0) {",
+                                    "        pm.expect(jsonData[0]).to.have.property('id');",
+                                    "        pm.expect(jsonData[0]).to.have.property('nombre');",
+                                    "        pm.expect(jsonData[0]).to.have.property('precio');",
+                                    "    }",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
                     "response": []
                 },
                 {
@@ -242,6 +269,24 @@
                             ]
                         }
                     },
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "pm.test(\"Cart has items array\", function () {",
+                                    "    pm.expect(jsonData).to.have.property('items');",
+                                    "    pm.expect(jsonData.items).to.be.an('array');",
+                                    "});",
+                                    "pm.test(\"Cart has totals\", function () {",
+                                    "    pm.expect(jsonData).to.have.property('total');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
                     "response": []
                 },
                 {
