@@ -34,7 +34,10 @@ export const apiRequest = async <T>(
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Error desconocido' }));
+    const error = await response.json().catch(async () => {
+      const text = await response.text();
+      return { error: text || `Error HTTP ${response.status}` };
+    });
     throw new Error(error.error || `HTTP ${response.status}`);
   }
 
