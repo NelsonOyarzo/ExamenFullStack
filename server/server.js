@@ -687,6 +687,8 @@ app.post('/api/webpay/commit', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🎴 PokéStore API escuchando en http://localhost:${PORT}`));
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`🎴 PokéStore API escuchando en http://localhost:${PORT}`));
+}
 
 module.exports = app;
