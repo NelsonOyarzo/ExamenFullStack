@@ -26,6 +26,22 @@ const DiscoverPage: React.FC = () => {
         );
     }
 
+    if (externalCards.length === 0) {
+        return (
+            <div className="container mx-auto px-4 py-16 text-center">
+                <div className="text-6xl mb-4">😿</div>
+                <h2 className="text-2xl font-bold mb-2">No pudimos conectar con el servidor de Pokémon</h2>
+                <p className="text-gray-600 mb-6">El API externo está tardando demasiado o no responde.</p>
+                <button
+                    onClick={loadCards}
+                    className="bg-pokemon-blue hover:bg-pokemon-red text-white font-bold py-3 px-6 rounded-lg shadow-hard hover:shadow-none transition-all"
+                >
+                    Reintentar Conexión
+                </button>
+            </div>
+        );
+    }
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-8">
