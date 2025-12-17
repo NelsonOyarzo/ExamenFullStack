@@ -1,5 +1,5 @@
 // services/apiConfig.ts
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 export const getAuthToken = (): string | null => {
   return localStorage.getItem('pokestore_token');
