@@ -33,15 +33,19 @@ export const apiRequest = async <T>(
     },
   });
 
-  if (!response.ok) {
-    const error = await response.json().catch(async () => {
-      const text = await response.text();
-      return { error: text || `Error HTTP ${response.status}` };
-    });
-    throw new Error(error.error || `HTTP ${response.status}`);
+  const text = await response.text();
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    data = null;
   }
 
-  return response.json();
+  if (!response.ok) {
+    throw new Error(data?.error || text || `HTTP ${response.status}`);
+  }
+
+  return data as T;
 };
 
 export default API_BASE_URL;
